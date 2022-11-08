@@ -3,11 +3,20 @@ public class FirstTaskPostProc extends vertic_AbstractProcessor implements verti
     private vertic_RestService.Response response;
     private vertic_RestService.Request request;
 
+    private vertic_UnitOfWork uow = new vertic_UnitOfWork(
+                new Schema.SObjectType[]{
+                    Case.SObjectType,
+                    Contact.SObjectType
+                }
+            );
+
     public override vertic_Response process(vertic_Request request) {
         this.request = (vertic_RestService.Request) request;
         this.response = (vertic_RestService.Response) super.response;
 
         this.doSubmit();
+
+        this.uow.commitWork();
 
         return this.response;
     }
@@ -19,23 +28,15 @@ public class FirstTaskPostProc extends vertic_AbstractProcessor implements verti
             LastName = this.request.getRequiredString('lastName')
         );
         vertic_Utils.sObjects.deduplicate(contactVar);
-        
+
         Case caseVar = new Case(
             Subject = this.request.getRequiredString('subject'),
             ContactId = contactVar.Id
         );
 
-        vertic_UnitOfWork uow = new vertic_UnitOfWork(
-            new Schema.SObjectType[]{
-                Case.SObjectType,
-                Contact.SObjectType
-            }
-        );
+        this.uow.registerNew(contactVar);
+        this.uow.registerNew(caseVar, Case.ContactId, contactVar);
 
-        uow.registerNew(contactVar);
-        uow.registerNew(caseVar, Case.ContactId, contactVar);
-
-        uow.commitWork();
     }
 
     protected override vertic_Response getResponseInstance() {
