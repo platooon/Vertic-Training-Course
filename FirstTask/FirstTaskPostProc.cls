@@ -19,12 +19,11 @@ public class FirstTaskPostProc extends vertic_AbstractProcessor implements verti
             LastName = this.request.getRequiredString('lastName')
         );
         vertic_Utils.sObjects.deduplicate(contactVar);
-
-        List<Case> caseList = new List<Case>();
-        Case caseVar = new Case();
-        caseVar.Subject = this.request.getRequiredString('subject');
-        caseVar.ContactId = contactVar.Id;
-        caseList.add(caseVar);
+        
+        Case caseVar = new Case(
+            Subject = this.request.getRequiredString('subject'),
+            ContactId = contactVar.Id
+        );
 
         vertic_UnitOfWork uow = new vertic_UnitOfWork(
             new Schema.SObjectType[]{
