@@ -1,0 +1,108 @@
+<aura:component description="CaseManagement" extends="c:vertic_Base" implements="force:appHostable">
+
+    <aura:attribute name="filter" type="Map" default="{}"/>
+    <aura:set attribute="hideContentOnBusy" value="{!false}"/>
+
+    <aura:set attribute="processor" value="vertic_GetPageReferenceContentProc"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.handleInit}"/>
+
+    <lightning:card title="Create Case">
+        <aura:if isTrue="{!not(empty(v.meta.dto))}">
+            <div class="slds-m-left_medium">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_2-of-12">
+                        <div class="slds-truncate" title="Case Subject">Case Subject</div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-12">
+                        <div class="slds-truncate" title="Case Status">Case Status</div>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_2-of-12">
+                        <lightning:input label=""
+                                         variant="label-hidden"
+                                         name="subject"
+                                         value="{!v.meta.dto.case.Subject}"
+                                         required="true"/>
+                    </div>
+                    <div class="slds-col slds-size_1-of-12">
+                        <c:vertic_Select label=""
+                                         class="label-hidden"
+                                         disabled="{!false}"
+                                         options="{!v.meta.selectOptions.statusOptions}"
+                                         value="{!v.meta.dto.case.Status}"/>
+                    </div>
+                    <div class="slds-col slds-size_1-of-12">
+                        <lightning:button label="Create"
+                                          variant="brand"
+                                          onclick="{!c.createCaseClick}"/>
+                    </div>
+                    <div class="slds-col slds-size_8-of-12"></div>
+                </div>
+            </div>
+        </aura:if>
+    </lightning:card>
+
+    <lightning:card title="Search for Contact" class="search">
+        <div class="slds-m-left_medium">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_2-of-12">
+                    <div class="slds-truncate" title="Contact First Name">Contact First Name</div>
+                </div>
+            </div>
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_2-of-12">
+                    <lightning:input label=""
+                                     variant="label-hidden"
+                                     name="contactFirstName"
+                                     value="{!v.filter.firstName}"/>
+                </div>
+                <div class="slds-col slds-size_1-of-12">
+                    <lightning:button label="Search"
+                                      variant="brand"
+                                      onclick="{!c.searchAllContactClick}"/>
+                </div>
+                <div class="slds-col slds-size_9-of-12"></div>
+            </div>
+        </div>
+    </lightning:card>
+
+    <aura:if isTrue="{!not(empty(v.meta.dto.contacts))}">
+        <lightning:card>
+            <div class="slds-m-horizontal_medium">
+
+                <div class="slds-grid slds-gutters slds-wrap slds-color__background_gray-4 slds-p-vertical_medium">
+                    <div class="slds-col slds-size_1-of-3 slds-align_absolute-center">
+                        <b class="slds-color__background_gray-4">FirstName</b>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-3 slds-align_absolute-center">
+                        <b>LastName</b>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-3 slds-align_absolute-center">
+                        <b>Email</b>
+                    </div>
+                </div>
+                <aura:iteration items="{!v.meta.dto.contacts}" var="contactVar">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        <div class="slds-col slds-size_1-of-3 slds-align_absolute-center">
+                            {!contactVar.FirstName}
+                        </div>
+                        <div class="slds-col slds-size_1-of-3 slds-align_absolute-center">
+                            {!contactVar.LastName}
+                        </div>
+                        <div class="slds-col slds-size_1-of-3 slds-align_absolute-center">
+                            {!contactVar.Email}
+                        </div>
+                        <div class="slds-col slds-size_1-of-1">
+                            <hr/>
+                        </div>
+                    </div>
+                </aura:iteration>
+            </div>
+        </lightning:card>
+    </aura:if>
+
+</aura:component>
