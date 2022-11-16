@@ -72,28 +72,28 @@
         <lightning:card>
             <div class="slds-m-horizontal_medium">
 
-                <div class="slds-grid slds-gutters slds-wrap slds-color__background_gray-4 slds-p-vertical_medium">
-                    <div class="slds-col slds-size_1-of-3 slds-align_absolute-center">
-                        <b class="slds-color__background_gray-4">FirstName</b>
+                <div class="slds-grid slds-gutters slds-wrap slds-color__background_gray-4 slds-p-vertical_medium slds-align_absolute-center slds-text-align_center">
+                    <div class="slds-col slds-size_1-of-3">
+                        <b">FirstName</b>
                     </div>
 
-                    <div class="slds-col slds-size_1-of-3 slds-align_absolute-center">
+                    <div class="slds-col slds-size_1-of-3">
                         <b>LastName</b>
                     </div>
 
-                    <div class="slds-col slds-size_1-of-3 slds-align_absolute-center">
+                    <div class="slds-col slds-size_1-of-3">
                         <b>Email</b>
                     </div>
                 </div>
                 <aura:iteration items="{!v.meta.dto.contacts}" var="contactVar">
-                    <div class="slds-grid slds-gutters slds-wrap">
-                        <div class="slds-col slds-size_1-of-3 slds-align_absolute-center">
+                    <div class="slds-grid slds-gutters slds-wrap slds-align_absolute-center slds-text-align_center">
+                        <div class="slds-col slds-size_1-of-3">
                             {!contactVar.FirstName}
                         </div>
-                        <div class="slds-col slds-size_1-of-3 slds-align_absolute-center">
+                        <div class="slds-col slds-size_1-of-3">
                             {!contactVar.LastName}
                         </div>
-                        <div class="slds-col slds-size_1-of-3 slds-align_absolute-center">
+                        <div class="slds-col slds-size_1-of-3">
                             {!contactVar.Email}
                         </div>
                         <div class="slds-col slds-size_1-of-1">
