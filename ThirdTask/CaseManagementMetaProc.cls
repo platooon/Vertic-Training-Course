@@ -4,7 +4,10 @@ public class CaseManagementMetaProc extends vertic_MetadataProcessor {
         this.request = request == null ? new vertic_MetadataProcessor.MetadataRequest() : (vertic_MetadataProcessor.MetadataRequest) request;
         System.debug(this.request);
         this.request.fields = new Set<SObjectField>{
-            Case.Status// SObject Fields, e.g. Contact.Salutation
+            Case.Status,// SObject Fields, e.g. Contact.Salutation
+            Contact.FirstName,
+            Contact.LastName,
+            Contact.Email
         };
 
         super.process(this.request);
@@ -19,6 +22,6 @@ public class CaseManagementMetaProc extends vertic_MetadataProcessor {
         this.response.getMapper().mapFromListSObjects('cases', [SELECT Id, Status
                                                                     FROM Case]);
         this.response.getMapper().mapFromListSObjects('contacts', [SELECT Id, FirstName, LastName, Email
-                                                                    FROM Contact]);
+        FROM Contact]);
     }
 }
