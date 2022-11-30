@@ -1,0 +1,74 @@
+<apex:component id="GenerateContactTableStyles" layout="none">
+
+    <style>
+        @page {
+            margin: 2cm 2cm;
+            padding: 1cm;
+        }
+
+        @page rotated {
+            size: A4 landscape;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        table.table-main {
+            margin-bottom: 20px;
+            border-collapse: collapse;
+            border-radius: 5px;
+        }
+
+        table.table-main th {
+            font-weight: bold;
+            text-align: left;
+            padding: 10px 15px;
+            background: #d8d8d8;
+            font: 18px sans-serif;
+            border-left: 0.5px solid #d8d8d8;
+            border-right: 0.5px solid #d8d8d8;
+        }
+
+        table.table-main td {
+            text-align: left;
+            border: 0.5px solid #d8d8d8;
+            padding: 10px 15px;
+            font: 14px sans-serif;
+            vertical-align: top;
+        }
+
+        table.table-main tr:nth-child(2n){
+            background: #000000;
+        }
+
+        h2 {
+            font-size: 15pt;
+            color: #B7222E;
+            font-weight: normal;
+        }
+
+        .pagenumber:before {
+            content: counter(page);
+        }
+
+        .pagecount:before {
+            content: counter(page);
+        }
+
+        .header-content {
+            margin-top: 0.5cm;
+        }
+
+        .header-hr {
+            border-top: 1px solid #B7222E;
+            width: 540px;
+        }
+
+        .header-table > tr:first-child > td:first-child {
+            text-align: right;
+        }
+
+    </style>
+
+</apex:component>
