@@ -1,0 +1,215 @@
+<aura:component description="AccountManagement" extends="c:vertic_Base" implements="force:lightningQuickActionWithoutHeader,force:appHostable,force:hasRecordId" access="global">
+
+    <aura:set attribute="hideContentOnBusy" value="{!false}"/>
+
+    <aura:set attribute="processor" value="vertic_GetPageReferenceContentProc"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.handleInit}"/>
+
+    <c:vertic_Utils context="{!this}"/>
+
+    <aura:attribute name="items" type="Aura.Component[]"/>
+    <aura:attribute name="isModalOpen" type="Boolean" default="false"/>
+    <aura:attribute name="filter" type="Map" default="{}"/>
+    <aura:attribute name="isAsc" type="Boolean" default="true"/>
+    <aura:attribute name="showLess" type="Boolean" default="false"/>
+    <aura:attribute name="viewAll" type="Boolean" default="false"/>
+    <aura:attribute name="showMore" type="Integer" default="10"/>
+    <aura:attribute name="checkbox" type="Boolean" default="true"/>
+    <aura:attribute name="isChecked" type="Boolean" default="true"/>
+
+    <lightning:card title="New Account" iconName="standard:account">
+
+        <div class="slds-m-horizontal_medium">
+            <c:vertic_ErrorMessages aura:id="errors"/>
+        </div>
+
+        <div aura:id="accountManagementAccount">
+            <div class="slds-m-left_medium account-grid">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_6-of-12">
+                        <div class="slds-truncate" title="Account Name">
+                            Account Name
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <div class="slds-truncate" title="Account Type">Type</div>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters account-grid">
+                    <div class="slds-col slds-size_4-of-8">
+                        <lightning:input label=""
+                                         variant="label-hidden"
+                                         name="subject"
+                                         value="{!v.meta.dto.accounts.Name}"
+                                         required="true"/>
+                    </div>
+                    <div class="slds-col slds-size_4-of-8 account-grid">
+                        <c:vertic_Select label=""
+                                         class="label-hidden"
+                                         disabled="{!false}"
+                                         options="{!v.meta.selectOptions.typeOptions}"
+                                         value="{!v.meta.dto.accounts.Type}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div aura:id="accountManagementContact">
+            <lightning:card iconName="standard:contact" title="Contacts" class="slds-card_boundary slds-m-vertical_medium slds-color__border_gray-1">
+                <aura:set attribute="actions">
+                    <lightning:button label="Add New Contact" iconName="utility:add" disabled="{!v.isBusy}" onclick="{!c.handleAddNewContactClick}"/>
+                    <lightning:button label="Add Existing Contact" iconName="utility:add" disabled="{!v.isBusy}" onclick="{!c.handleAddExistingContactClick}"/>
+                </aura:set>
+
+                <div class="slds-m-horizontal_small">
+                    <table class="slds-table slds-table_fixed-layout slds-no-row-hover slds-m-vertical_medium " role="grid">
+                        <thead>
+                        <tr class="slds-line-height_reset">
+                            <th scope="col" style="width: 15%;">
+                                FirstName
+                            </th>
+                            <th scope="col" style="width: 15%;">
+                                LastName
+                            </th>
+                            <th scope="col" style="width: 15%;">
+                                Phone
+                            </th>
+                            <th class="slds-text-align_right" scope="col" style="width: 5%;">
+                                <div class="slds-truncate slds-assistive-text" id="column-group-header"></div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <aura:iteration items="{!v.meta.dto.items}" var="item" indexVar="indexVar">
+                            <c:AccountManagementItem item="{!item}"
+                                                     index="{!indexVar}"
+                                                     isBusy="{!v.isBusy}"
+                                                     onDelete="{!c.deleteContactClick}"
+                                                     aura:id="itemCmp">
+                            </c:AccountManagementItem>
+                        </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+            </lightning:card>
+        </div>
+
+        <lightning:card class="slds-color__border_gray-1">
+            <aura:set attribute="actions">
+                <lightning:button label="Cancel"
+                                  onclick="{!c.handleCancelClick}"/>
+                <lightning:button label="Save"
+                                  variant="brand"
+                                  onclick="{!c.handleSaveClick}"/>
+            </aura:set>
+        </lightning:card>
+
+        <aura:if isTrue="{!v.isModalOpen}">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+                <div class="slds-modal__container">
+
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.closeModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Add Existing Contacts</h2>
+                    </header>
+                    <div class="slds-color__background_gray-1">
+                        <div class="slds-m-horizontal_medium">
+                            <div class="slds-grid slds-gutters slds-wrap slds-color__background_gray-2 slds-align_absolute-center">
+                                <div class="slds-col slds-size_1-of-7 slds-text-align_center">
+                                    <lightning:input type="checkbox"
+                                                     checked="{!v.filter.checked}"
+                                                     label=""
+                                                     class="label-hidden"
+                                                     onchange="{!c.handleSelectAll}"/>
+                                </div>
+                                <div class="slds-col slds-size_2-of-7">
+                                    <span onkeydown="{!c.keyCheck}">
+                                        <lightning:input label="First Name"
+                                                         name="contactFirstName"
+                                                         value="{!v.filter.firstName}"/>
+                                    </span>
+                                </div>
+                                <div class="slds-col slds-size_2-of-7">
+                                    <span onkeydown="{!c.keyCheck}">
+                                        <lightning:input label="Last Name"
+                                                         name="contactLastName"
+                                                         value="{!v.filter.lastName}"/>
+                                    </span>
+                                </div>
+                                <div class="slds-col slds-size_2-of-7">
+                                    <span onkeydown="{!c.keyCheck}">
+                                        <lightning:input label="Phone"
+                                                         name="contactEmail"
+                                                         value="{!v.filter.phone}"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                            <aura:if isTrue="{!not(empty(v.meta.dto.contacts))}">
+                                <aura:iteration items="{!v.meta.dto.contacts}" var="contactVar">
+                                    <div class="slds-grid slds-gutters slds-wrap slds-align_absolute-center slds-text-align_center slds-scrollable_y slds-p-vertical_xx-small">
+                                        <div class="slds-col slds-size_1-of-7">
+                                            <lightning:input type="checkbox"
+                                                             checked="{!contactVar.checked}"
+                                                             label=""
+                                                             class="label-hidden"
+                                                             disabled="{!checkbox}"/>
+                                        </div>
+                                        <div class="slds-col slds-size_2-of-7">
+                                            <lightning:input label=""
+                                                             class="label-hidden"
+                                                             value="{!contactVar.FirstName}"
+                                                             disabled="true"/>
+                                        </div>
+                                        <div class="slds-col slds-size_2-of-7">
+                                            <lightning:input label=""
+                                                             class="label-hidden"
+                                                             value="{!contactVar.LastName}"
+                                                             disabled="true"/>
+                                        </div>
+                                        <div class="slds-col slds-size_2-of-7">
+                                            <lightning:input label=""
+                                                             class="label-hidden"
+                                                             value="{!contactVar.Phone}"
+                                                             disabled="true"/>
+                                        </div>
+                                    </div>
+                                </aura:iteration>
+                            </aura:if>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slds-modal__footer">
+                        <div class="slds-align_absolute-center slds-text-body_small">
+                            <aura:if isTrue="{!v.showLess}">
+                                <lightning:button label="Show Less"
+                                                  variant="base"
+                                                  onclick="{!c.handleShowLessClick}"/>
+                            </aura:if>
+
+                            <lightning:button label="Show More"
+                                              variant="base"
+                                              onclick="{!c.handleShowMoreClick}"/>
+
+                            <lightning:button label="View All"
+                                              variant="base"
+                                              onclick="{!c.handleViewAllClick}"/>
+                        </div>
+                        <lightning:button label="Confirm"
+                                          variant="brand"
+                                          onclick="{!c.handleConfirmClick}"/>
+                    </div>
+
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+    </lightning:card>
+
+</aura:component>

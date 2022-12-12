@@ -1,0 +1,65 @@
+<apex:component id="GenerateContactTable">
+    <apex:attribute name="dto" description="Data Transfer Object" type="Map"/>
+    <apex:attribute name="len" description="Data Transfer Object" type="List"/>
+
+    <!--Header START-->
+    <div class="odd-top-center header-content">
+        <table class="header-table">
+            <tr>
+                <td>
+                    <h2>Contact Table</h2>
+                    <hr class="header-hr"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="even-top-center header-content">
+        <table class="header-table">
+            <tr>
+                <td>
+                    <h2>Contact Table</h2>
+                    <hr class="header-hr"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!--Header END-->
+
+    <!--Footer START-->
+    <div class="odd-bottom-center">
+        <table class="table-footer">
+            <tr>
+                <td colspan="3">Page <span class="pagenumber"></span> of <span class="pagecount"></span></td>
+            </tr>
+        </table>
+    </div>
+    <div class="even-bottom-center">
+        <table class="table-footer">
+            <tr>
+<!--                <td colspan="3">Page <span class="pagenumber"></span> of <span class="pagecount"></span></td>-->
+            </tr>
+        </table>
+    </div>
+    <!--Footer END-->
+
+    <div>
+        <table class="table-main">
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+            </tr>
+            <apex:repeat var="pos" value="{!len}">
+                <apex:repeat var="contacts" value="{!dto}">
+                    <tr>
+                        <td>{!dto[contacts][pos].FirstName}</td>
+                        <td>{!dto[contacts][pos].LastName}</td>
+                        <td>{!dto[contacts][pos].Email}</td>
+                    </tr>
+                </apex:repeat>
+            </apex:repeat>
+        </table>
+    </div>
+
+</apex:component>

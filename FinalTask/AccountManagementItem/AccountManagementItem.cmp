@@ -1,0 +1,40 @@
+<aura:component description="AccountManagementItem" controller="vertic_CommonCtrl" access="global">
+
+    <aura:attribute name="isBusy" type="Boolean" access="public"/>
+    <aura:attribute name="item" type="Map" access="public"/>
+    <aura:attribute name="index" type="Integer" access="public"/>
+
+    <aura:registerEvent name="onDelete" type="c:vertic_ComponentEvent"/>
+
+        <tr>
+            <td>
+                <lightning:input label=""
+                                 variant="label-hidden"
+                                 name="contactFirstName"
+                                 value="{!v.item.FirstName}"/>
+            </td>
+
+            <td>
+                <lightning:input label=""
+                                 variant="label-hidden"
+                                 name="contactLastName"
+                                 required="true"
+                                 value="{!v.item.LastName}"/>
+            </td>
+
+            <td>
+                <lightning:input label=""
+                                 variant="label-hidden"
+                                 name="contactPhone"
+                                 value="{!v.item.Phone}"/>
+            </td>
+
+            <td>
+                <lightning:buttonIcon iconName="utility:delete"
+                                      onclick="{!c.deleteContactClick}"
+                                      alternativeText=""/>
+            </td>
+        </tr>
+
+
+</aura:component>

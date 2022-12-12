@@ -1,0 +1,16 @@
+.THIS .label-hidden.slds-form-element > label {
+    display: none;
+}
+
+.THIS .account-grid {
+    margin-right: 2px;
+}
+
+.THIS .modal-body {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.THIS .min-height {
+    min-height: 50vh;
+}
